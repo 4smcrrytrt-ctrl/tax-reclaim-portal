@@ -1,18 +1,24 @@
-const form = document.getElementById('taxReclaimForm');
+const form = document.getElementById('regulatoryReportForm');
 const statusText = document.getElementById('status');
 const reportResult = document.getElementById('reportResult');
 const reportSummary = document.getElementById('reportSummary');
 const downloadButton = document.getElementById('downloadReport');
-const taxYearInput = form.elements.taxYear;
-const incomeTypes = {
-  dividends: 'Dividendes',
-  interest: 'Intérêts',
-  royalties: 'Redevances',
-  other: 'Autre revenu',
+const domainNames = {
+  financial: 'Reporting financier',
+  environmental: 'Environnement et durabilité',
+  'data-protection': 'Protection des données',
+  workplace: 'Social et travail',
+  sectoral: 'Réglementation sectorielle',
+  other: 'Autre obligation',
+};
+const complianceStatuses = {
+  compliant: 'Conforme',
+  'in-progress': 'En cours d’évaluation',
+  'action-required': 'Actions requises',
+  'not-applicable': 'Non applicable',
 };
 
 let reportJson = '';
-taxYearInput.max = new Date().getFullYear();
 
 form.addEventListener('submit', (event) => {
   event.preventDefault();
@@ -20,48 +26,53 @@ form.addEventListener('submit', (event) => {
   statusText.textContent = '';
 
   const formData = new FormData(form);
-  const withheldAmount = Number(formData.get('withheldAmount'));
-  const claimAmount = Number(formData.get('claimAmount'));
+  const periodStart = formData.get('periodStart');
+  const periodEnd = formData.get('periodEnd');
+  const dueDate = formData.get('dueDate');
 
-  if (claimAmount > withheldAmount) {
+  if (periodEnd < periodStart) {
     statusText.classList.add('error');
-    statusText.textContent = 'Le montant demandé ne peut pas dépasser l’impôt retenu à la source.';
-    form.elements.claimAmount.focus();
+    statusText.textContent = 'La fin de la période doit être égale ou postérieure à sa date de début.';
+    form.elements.periodEnd.focus();
+    return;
+  }
+
+  if (dueDate && dueDate < periodEnd) {
+    statusText.classList.add('error');
+    statusText.textContent = 'La date limite de transmission ne peut pas précéder la fin de la période.';
+    form.elements.dueDate.focus();
     return;
   }
 
   const document = form.elements.document.files[0];
-  if (document && !['application/pdf', 'image/jpeg', 'image/png'].includes(document.type)) {
-    statusText.classList.add('error');
-    statusText.textContent = 'Veuillez sélectionner un fichier PDF, JPG ou PNG.';
-    form.elements.document.focus();
-    return;
-  }
-
   const report = {
     schemaVersion: '1.0',
-    reportType: 'withholding-tax-reclaim',
+    reportType: 'regulatory-compliance',
     generatedAt: new Date().toISOString(),
-    applicant: {
-      firstName: formData.get('firstName').trim(),
-      lastName: formData.get('lastName').trim(),
-      email: formData.get('email').trim(),
-      taxResidenceCountry: formData.get('country').trim(),
-      taxIdentificationNumber: formData.get('taxNumber').trim(),
+    organization: {
+      legalName: formData.get('organizationName').trim(),
+      identifier: formData.get('organizationId').trim(),
+      jurisdiction: formData.get('jurisdiction').trim(),
+      responsibleContact: formData.get('contactEmail').trim(),
     },
-    claim: {
-      taxYear: Number(formData.get('taxYear')),
-      incomeType: formData.get('incomeType'),
-      sourceCountry: formData.get('sourceCountry').trim(),
-      currency: 'EUR',
-      grossIncomeAmount: Number(formData.get('grossAmount')),
-      withholdingTaxAmount: withheldAmount,
-      requestedRefundAmount: claimAmount,
-      reason: formData.get('reason').trim(),
+    obligation: {
+      regulatoryDomain: formData.get('regulatoryDomain'),
+      regulatoryDomainLabel: domainNames[formData.get('regulatoryDomain')],
+      reference: formData.get('regulationReference').trim(),
+      reportingPeriod: { start: periodStart, end: periodEnd },
+      submissionDueDate: dueDate || null,
+      complianceStatus: formData.get('complianceStatus'),
+      complianceStatusLabel: complianceStatuses[formData.get('complianceStatus')],
+    },
+    narrative: {
+      summary: formData.get('summary').trim(),
+      actionsAndExceptions: formData.get('actions').trim() || null,
     },
     supportingDocument: document
       ? { provided: true, filename: document.name }
       : { provided: false },
+    disclaimer:
+      'Draft prepared locally by the user. Not submitted to a regulator and not validated for accuracy or completeness.',
   };
 
   reportJson = JSON.stringify(report, null, 2);
@@ -69,7 +80,7 @@ form.addEventListener('submit', (event) => {
   reportResult.hidden = false;
   reportResult.scrollIntoView({ behavior: 'smooth', block: 'start' });
   statusText.classList.add('success');
-  statusText.textContent = 'Rapport généré. Aucune information n’a été transmise.';
+  statusText.textContent = 'Rapport créé localement. Aucune information n’a été transmise.';
 });
 
 downloadButton.addEventListener('click', () => {
@@ -79,7 +90,7 @@ downloadButton.addEventListener('click', () => {
   const url = URL.createObjectURL(file);
   const link = document.createElement('a');
   link.href = url;
-  link.download = `rapport-reclaim-${new Date().toISOString().slice(0, 10)}.json`;
+  link.download = `rapport-reglementaire-${new Date().toISOString().slice(0, 10)}.json`;
   document.body.append(link);
   link.click();
   link.remove();
@@ -88,16 +99,14 @@ downloadButton.addEventListener('click', () => {
 
 function renderSummary(report) {
   const rows = [
-    ['Demandeur', `${report.applicant.firstName} ${report.applicant.lastName}`],
-    ['Année fiscale', String(report.claim.taxYear)],
-    ['Revenu', incomeTypes[report.claim.incomeType]],
-    ['Pays source', report.claim.sourceCountry],
+    ['Organisation', report.organization.legalName],
+    ['Référence', report.obligation.reference],
+    ['Domaine', report.obligation.regulatoryDomainLabel],
     [
-      'Montant demandé',
-      new Intl.NumberFormat('fr-FR', { style: 'currency', currency: report.claim.currency }).format(
-        report.claim.requestedRefundAmount,
-      ),
+      'Période déclarée',
+      `${formatDate(report.obligation.reportingPeriod.start)} — ${formatDate(report.obligation.reportingPeriod.end)}`,
     ],
+    ['État de conformité', report.obligation.complianceStatusLabel],
   ];
 
   reportSummary.replaceChildren(
@@ -108,5 +117,11 @@ function renderSummary(report) {
       description.textContent = value;
       return [term, description];
     }),
+  );
+}
+
+function formatDate(date) {
+  return new Intl.DateTimeFormat('fr-FR', { dateStyle: 'medium', timeZone: 'UTC' }).format(
+    new Date(`${date}T00:00:00Z`),
   );
 }

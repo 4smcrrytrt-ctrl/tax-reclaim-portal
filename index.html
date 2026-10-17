@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tax Reclaim - Soumission de demande</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="container">
+      <header>
+        <h1>Demande de Tax Reclaim</h1>
+        <p>Complétez ce formulaire pour soumettre votre demande.</p>
+      </header>
+
+      <section class="card">
+        <form id="taxReclaimForm" novalidate>
+          <div class="grid">
+            <label>
+              Prénom
+              <input type="text" name="firstName" required />
+            </label>
+
+            <label>
+              Nom
+              <input type="text" name="lastName" required />
+            </label>
+
+            <label class="full">
+              Email
+              <input type="email" name="email" required />
+            </label>
+
+            <label>
+              Pays
+              <input type="text" name="country" required />
+            </label>
+
+            <label>
+              Numéro fiscal
+              <input type="text" name="taxNumber" required />
+            </label>
+
+            <label class="full">
+              Montant réclamé (EUR)
+              <input type="number" name="amount" min="0" step="0.01" required />
+            </label>
+
+            <label class="full">
+              Motif de la demande
+              <textarea name="reason" rows="4" required></textarea>
+            </label>
+
+            <label class="full">
+              Pièce justificative (PDF/JPG/PNG)
+              <input type="file" name="document" accept=".pdf,.jpg,.jpeg,.png" required />
+            </label>
+          </div>
+
+          <div class="actions">
+            <button type="submit">Soumettre la demande</button>
+          </div>
+
+          <p id="status" class="status" aria-live="polite"></p>
+        </form>
+      </section>
+    </main>
+
+    <script src="script.js"></script>
+  </body>
+</html>

@@ -82,18 +82,40 @@ body {
   box-shadow: 0 0 0 3px #e5f1e8;
 }
 
+.header-nav {
+  display: flex;
+  align-items: center;
+  gap: 27px;
+}
+
+.nav-link {
+  color: #77847c;
+  font-size: 0.77rem;
+  text-decoration: none;
+  transition: color 150ms ease;
+}
+
+.nav-link:hover,
+.nav-link.active {
+  color: var(--green-dark);
+}
+
+.nav-link.active {
+  font-weight: 600;
+}
+
 .container {
-  width: min(100% - 48px, 1060px);
+  width: min(100% - 48px, 1120px);
   margin: 0 auto;
-  padding: 69px 0 32px;
+  padding: 56px 0 32px;
 }
 
 .intro {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 250px;
-  gap: 55px;
-  align-items: end;
-  margin-bottom: 36px;
+  grid-template-columns: minmax(0, 1fr) 290px;
+  gap: 50px;
+  align-items: center;
+  margin-bottom: 31px;
 }
 
 .eyebrow,
@@ -109,7 +131,7 @@ body {
   display: flex;
   align-items: center;
   gap: 0.55rem;
-  margin-bottom: 19px;
+  margin-bottom: 16px;
 }
 
 .eyebrow-line {
@@ -130,20 +152,49 @@ h2 {
 }
 
 h1 {
-  max-width: 670px;
+  max-width: 680px;
   margin-bottom: 13px;
-  font-size: clamp(2.2rem, 4.2vw, 3.55rem);
+  font-size: clamp(2.2rem, 4vw, 3.35rem);
   font-weight: 600;
   letter-spacing: -0.06em;
   line-height: 1.1;
 }
 
 .intro-description {
-  max-width: 610px;
-  margin-bottom: 25px;
+  max-width: 680px;
+  margin-bottom: 19px;
   color: var(--muted);
-  font-size: 0.98rem;
+  font-size: 0.91rem;
   line-height: 1.7;
+}
+
+.intro-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 19px;
+}
+
+.intro-meta > span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: #748078;
+  font-size: 0.7rem;
+  font-weight: 500;
+}
+
+.meta-icon {
+  color: #8b9a90;
+  font-size: 0.87rem;
+}
+
+.meta-icon.check {
+  color: var(--green);
+  font-weight: 700;
+}
+
+.meta-icon.lock {
+  font-size: 1rem;
 }
 
 .steps {
@@ -188,11 +239,24 @@ h1 {
 }
 
 .privacy-card {
-  padding: 21px 20px 19px;
+  padding: 19px 20px 17px;
   border: 1px solid #dce9df;
-  border-radius: 12px;
-  background: #eef5ef;
-  transform: translateY(-2px);
+  border-radius: 11px;
+  background: linear-gradient(145deg, #f0f6f0, #eaf2eb);
+}
+
+.privacy-card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 13px;
+}
+
+.privacy-label {
+  color: #77907e;
+  font-size: 0.59rem;
+  font-weight: 700;
+  letter-spacing: 0.09em;
 }
 
 .privacy-icon {
@@ -200,7 +264,6 @@ h1 {
   height: 28px;
   display: grid;
   place-items: center;
-  margin-bottom: 13px;
   border-radius: 8px;
   background: #dcecdf;
   color: var(--green);
@@ -216,10 +279,148 @@ h1 {
 }
 
 .privacy-card p {
-  margin: 0;
+  margin: 0 0 13px;
   color: #64746a;
   font-size: 0.75rem;
   line-height: 1.6;
+}
+
+.privacy-status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding-top: 11px;
+  border-top: 1px solid #dce8de;
+  color: #66786b;
+  font-size: 0.66rem;
+}
+
+.privacy-status .secure-dot {
+  width: 6px;
+  height: 6px;
+}
+
+.workspace {
+  display: grid;
+  grid-template-columns: 220px minmax(0, 1fr);
+  overflow: hidden;
+  border: 1px solid #dfe6e0;
+  border-radius: 14px;
+  background: var(--white);
+  box-shadow: 0 13px 40px rgba(25, 49, 35, 0.055);
+}
+
+.workspace-rail {
+  display: flex;
+  flex-direction: column;
+  padding: 28px 19px 20px;
+  background:
+    radial-gradient(ellipse at 5% 0%, rgba(101, 147, 116, 0.25), transparent 55%),
+    #183d32;
+  color: #fff;
+}
+
+.rail-label {
+  margin: 0 0 22px;
+  color: #a5b9aa;
+  font-size: 0.59rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+}
+
+.rail-step {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  color: #afc0b4;
+}
+
+.rail-step.current {
+  color: #fff;
+}
+
+.rail-step-mark {
+  width: 27px;
+  height: 27px;
+  flex: 0 0 27px;
+  display: grid;
+  place-items: center;
+  border: 1px solid #638271;
+  border-radius: 50%;
+  color: #c4d4c8;
+  font-size: 0.62rem;
+  font-weight: 600;
+}
+
+.rail-step.current .rail-step-mark {
+  border-color: #afcfb3;
+  background: #d9ebdc;
+  color: #234f3d;
+}
+
+.rail-step strong,
+.rail-step small {
+  display: block;
+}
+
+.rail-step strong {
+  margin: 2px 0 4px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.rail-step small {
+  color: #a6b8ab;
+  font-size: 0.64rem;
+  line-height: 1.4;
+}
+
+.rail-connector {
+  height: 23px;
+  width: 1px;
+  margin: 3px 0 3px 13px;
+  background: #527261;
+}
+
+.rail-help {
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
+  margin-top: auto;
+  padding: 13px 11px;
+  border: 1px solid rgba(208, 227, 211, 0.16);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.055);
+}
+
+.help-icon {
+  width: 17px;
+  height: 17px;
+  flex: 0 0 17px;
+  display: grid;
+  place-items: center;
+  margin-top: 1px;
+  border: 1px solid #8ca998;
+  border-radius: 50%;
+  color: #d1e2d4;
+  font-size: 0.65rem;
+}
+
+.rail-help p {
+  margin: 0;
+  color: #b4c4b8;
+  font-size: 0.62rem;
+  line-height: 1.55;
+}
+
+.rail-help strong {
+  color: #f1f6f1;
+  font-size: 0.66rem;
+}
+
+.form-panel {
+  min-width: 0;
+  padding: 27px 35px 23px;
 }
 
 .form-card,
@@ -238,6 +439,12 @@ h1 {
   align-items: flex-start;
   padding-bottom: 25px;
   border-bottom: 1px solid #edf0ed;
+}
+
+.section-kicker span {
+  padding: 0 3px;
+  color: #a9b5ac;
+  font-weight: 400;
 }
 
 .form-heading h2,
@@ -561,16 +768,48 @@ a:focus-visible {
 
   .container {
     width: min(100% - 36px, 620px);
-    padding-top: 48px;
+    padding-top: 42px;
   }
 
   .intro {
     grid-template-columns: 1fr;
-    gap: 24px;
+    gap: 21px;
   }
 
   .privacy-card {
-    max-width: 460px;
+    max-width: 100%;
+  }
+
+  .workspace {
+    grid-template-columns: 1fr;
+  }
+
+  .workspace-rail {
+    padding: 17px 20px;
+  }
+
+  .rail-label,
+  .rail-help {
+    display: none;
+  }
+
+  .rail-step {
+    display: inline-flex;
+  }
+
+  .rail-connector {
+    position: absolute;
+    visibility: hidden;
+  }
+
+  .workspace-rail {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+
+  .form-panel {
+    padding: 26px 27px 22px;
   }
 }
 
@@ -581,6 +820,10 @@ a:focus-visible {
 
   .header-note {
     font-size: 0.68rem;
+  }
+
+  .header-nav {
+    display: none;
   }
 
   .container {
@@ -594,6 +837,41 @@ a:focus-visible {
 
   .intro-description {
     font-size: 0.89rem;
+  }
+
+  .intro-meta {
+    gap: 9px 13px;
+  }
+
+  .intro-meta > span {
+    font-size: 0.64rem;
+  }
+
+  .workspace-rail {
+    gap: 8px;
+    padding: 14px 15px;
+  }
+
+  .rail-step {
+    gap: 7px;
+  }
+
+  .rail-step-mark {
+    width: 24px;
+    height: 24px;
+    flex-basis: 24px;
+  }
+
+  .rail-step strong {
+    font-size: 0.68rem;
+  }
+
+  .rail-step small {
+    font-size: 0.58rem;
+  }
+
+  .form-panel {
+    padding: 23px 17px 20px;
   }
 
   .form-card,

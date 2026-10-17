@@ -3,67 +3,162 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Tax Reclaim - Soumission de demande</title>
+    <meta
+      name="description"
+      content="Préparez et exportez un rapport de demande de récupération de retenue à la source."
+    />
+    <meta name="theme-color" content="#f6f8f6" />
+    <title>Reclaim — Préparer un rapport fiscal</title>
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
-    <main class="container">
-      <header>
-        <h1>Demande de Tax Reclaim</h1>
-        <p>Complétez ce formulaire pour soumettre votre demande.</p>
-      </header>
+    <header class="site-header">
+      <a class="brand" href="#accueil" aria-label="Reclaim, accueil">
+        <span class="brand-mark" aria-hidden="true">R</span>
+        <span>reclaim<span class="brand-period">.</span></span>
+      </a>
+      <span class="header-note"><span class="secure-dot" aria-hidden="true"></span> Traitement local et privé</span>
+    </header>
 
-      <section class="card">
-        <form id="taxReclaimForm" novalidate>
-          <div class="grid">
-            <label>
-              Prénom
-              <input type="text" name="firstName" required />
-            </label>
-
-            <label>
-              Nom
-              <input type="text" name="lastName" required />
-            </label>
-
-            <label class="full">
-              Email
-              <input type="email" name="email" required />
-            </label>
-
-            <label>
-              Pays
-              <input type="text" name="country" required />
-            </label>
-
-            <label>
-              Numéro fiscal
-              <input type="text" name="taxNumber" required />
-            </label>
-
-            <label class="full">
-              Montant réclamé (EUR)
-              <input type="number" name="amount" min="0" step="0.01" required />
-            </label>
-
-            <label class="full">
-              Motif de la demande
-              <textarea name="reason" rows="4" required></textarea>
-            </label>
-
-            <label class="full">
-              Pièce justificative (PDF/JPG/PNG)
-              <input type="file" name="document" accept=".pdf,.jpg,.jpeg,.png" required />
-            </label>
+    <main class="container" id="accueil">
+      <section class="intro" aria-labelledby="page-title">
+        <div class="intro-copy">
+          <p class="eyebrow"><span class="eyebrow-line"></span> OUTIL DE REPORTING FISCAL</p>
+          <h1 id="page-title">Préparez votre demande de récupération d’impôt.</h1>
+          <p class="intro-description">
+            Rassemblez les informations utiles et générez un rapport structuré à transmettre à
+            l’administration ou à votre conseiller fiscal.
+          </p>
+          <div class="steps" aria-label="Étapes">
+            <div class="step active"><span>1</span> Vos informations</div>
+            <span class="step-divider" aria-hidden="true"></span>
+            <div class="step"><span>2</span> Votre rapport</div>
           </div>
+        </div>
+        <aside class="privacy-card" aria-label="Confidentialité">
+          <span class="privacy-icon" aria-hidden="true">↗</span>
+          <h2>Vos données restent chez vous</h2>
+          <p>Ce formulaire fonctionne dans votre navigateur. Aucune information n’est envoyée ni enregistrée sur ce site.</p>
+        </aside>
+      </section>
 
-          <div class="actions">
-            <button type="submit">Soumettre la demande</button>
+      <section class="form-card" aria-labelledby="form-title">
+        <div class="form-heading">
+          <div>
+            <p class="section-kicker">ÉTAPE 1 SUR 2</p>
+            <h2 id="form-title">Informations sur votre demande</h2>
+            <p class="form-subtitle">Les champs marqués d’un astérisque sont obligatoires.</p>
           </div>
+          <span class="form-icon" aria-hidden="true">✳</span>
+        </div>
 
-          <p id="status" class="status" aria-live="polite"></p>
+        <form id="taxReclaimForm">
+          <fieldset>
+            <legend><span class="legend-number">01</span> Coordonnées du demandeur</legend>
+            <div class="grid">
+              <label>
+                Prénom <span class="required" aria-hidden="true">*</span>
+                <input type="text" name="firstName" autocomplete="given-name" required />
+              </label>
+              <label>
+                Nom <span class="required" aria-hidden="true">*</span>
+                <input type="text" name="lastName" autocomplete="family-name" required />
+              </label>
+              <label>
+                Adresse e-mail <span class="required" aria-hidden="true">*</span>
+                <input type="email" name="email" autocomplete="email" placeholder="nom@exemple.com" required />
+              </label>
+              <label>
+                Pays de résidence fiscale <span class="required" aria-hidden="true">*</span>
+                <input type="text" name="country" autocomplete="country-name" placeholder="Ex. : France" required />
+              </label>
+              <label class="full">
+                Numéro d’identification fiscale <span class="required" aria-hidden="true">*</span>
+                <input type="text" name="taxNumber" autocomplete="off" required />
+                <span class="field-hint">Saisissez le numéro attribué par votre pays de résidence fiscale.</span>
+              </label>
+            </div>
+          </fieldset>
+
+          <fieldset>
+            <legend><span class="legend-number">02</span> Détails fiscaux</legend>
+            <div class="grid">
+              <label>
+                Année fiscale <span class="required" aria-hidden="true">*</span>
+                <input type="number" name="taxYear" min="2000" required />
+              </label>
+              <label>
+                Nature du revenu <span class="required" aria-hidden="true">*</span>
+                <select name="incomeType" required>
+                  <option value="" disabled selected>Sélectionnez une catégorie</option>
+                  <option value="dividends">Dividendes</option>
+                  <option value="interest">Intérêts</option>
+                  <option value="royalties">Redevances</option>
+                  <option value="other">Autre revenu</option>
+                </select>
+              </label>
+              <label>
+                Pays ayant prélevé l’impôt <span class="required" aria-hidden="true">*</span>
+                <input type="text" name="sourceCountry" placeholder="Ex. : Allemagne" required />
+              </label>
+              <label>
+                Montant brut du revenu (€) <span class="required" aria-hidden="true">*</span>
+                <input type="number" name="grossAmount" min="0.01" step="0.01" inputmode="decimal" required />
+              </label>
+              <label>
+                Impôt retenu à la source (€) <span class="required" aria-hidden="true">*</span>
+                <input type="number" name="withheldAmount" min="0.01" step="0.01" inputmode="decimal" required />
+              </label>
+              <label>
+                Montant demandé (€) <span class="required" aria-hidden="true">*</span>
+                <input type="number" name="claimAmount" min="0.01" step="0.01" inputmode="decimal" required />
+                <span class="field-hint">Ne peut pas dépasser l’impôt retenu à la source.</span>
+              </label>
+              <label class="full">
+                Motif ou précisions sur la demande <span class="required" aria-hidden="true">*</span>
+                <textarea name="reason" rows="4" placeholder="Décrivez brièvement le contexte de votre demande…" required></textarea>
+              </label>
+              <label class="full">
+                Pièce justificative <span class="optional">(facultatif)</span>
+                <input type="file" name="document" accept=".pdf,.jpg,.jpeg,.png,application/pdf,image/jpeg,image/png" />
+                <span class="field-hint">PDF, JPG ou PNG. Le fichier reste sur votre appareil et n’est pas inclus dans le rapport.</span>
+              </label>
+            </div>
+          </fieldset>
+
+          <div class="form-footer">
+            <p><span class="required" aria-hidden="true">*</span> Champs obligatoires</p>
+            <button type="submit">Générer mon rapport <span aria-hidden="true">→</span></button>
+          </div>
+          <p id="status" class="status" role="status" aria-live="polite"></p>
         </form>
       </section>
+
+      <section id="reportResult" class="report-result" aria-labelledby="result-title" hidden>
+        <div class="result-heading">
+          <div>
+            <p class="section-kicker">ÉTAPE 2 SUR 2</p>
+            <h2 id="result-title">Votre rapport est prêt</h2>
+            <p class="form-subtitle">Téléchargez votre rapport JSON et transmettez-le par le canal officiel approprié.</p>
+          </div>
+          <span class="result-check" aria-hidden="true">✓</span>
+        </div>
+        <dl id="reportSummary" class="report-summary"></dl>
+        <button id="downloadReport" class="secondary-button" type="button">Télécharger le rapport JSON <span aria-hidden="true">↓</span></button>
+      </section>
+
+      <aside class="notice" aria-label="Avis important">
+        <span class="notice-mark" aria-hidden="true">i</span>
+        <p>
+          <strong>À savoir</strong> — Cet outil prépare un brouillon et ne dépose pas de déclaration officielle.
+          Il ne fournit pas de conseil fiscal et ne vérifie pas votre éligibilité. Vérifiez les règles applicables
+          auprès de l’administration compétente ou d’un conseiller qualifié.
+        </p>
+      </aside>
+      <footer class="site-footer">
+        <span>Reclaim <span class="brand-period">·</span> Outil indépendant de préparation</span>
+        <span>Vos données ne quittent pas votre navigateur.</span>
+      </footer>
     </main>
 
     <script src="script.js"></script>
